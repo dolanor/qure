@@ -1,0 +1,11 @@
+
+services:
+  qure:
+    image: dolanor/qure:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - 4444
+    ports:
+      - 4444:4444
