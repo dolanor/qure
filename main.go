@@ -17,26 +17,9 @@ func main() {
 		hostPort = ":4444"
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		key := r.URL.EscapedPath()[1:]
+	http.HandleFunc("/", urlShortenerHandler)
 
-		v, ok := links[key]
-		if !ok {
-			http.Error(w, "not found", http.StatusNotFound)
-			return
-		}
-		http.Redirect(w, r, v, http.StatusTemporaryRedirect)
-	})
-
-	http.HandleFunc("/qr/", func(w http.ResponseWriter, r *http.Request) {
-		key := r.URL.EscapedPath()[4:]
-
-		v, ok := links[key]
-		if !ok {
-			http.Error(w, "not found", http.StatusNotFound)
-		}
-		w.Write([]byte("MY QR:" + v))
-	})
+	http.HandleFunc("/qr/", qrCodeHandler)
 
 	slog.Info("listening on", "hostPort", hostPort)
 	err := http.ListenAndServe(hostPort, nil)
