@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      DOMAIN: l.txg.re
+      DOMAIN: ${DOMAIN}
     expose:
       - 4444
     ports:
