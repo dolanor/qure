@@ -17,9 +17,11 @@ func main() {
 		hostPort = ":4444"
 	}
 
+	domain := os.Getenv("DOMAIN")
+
 	http.HandleFunc("/", urlShortenerHandler)
 
-	http.HandleFunc("/qr/", qrCodeHandler)
+	http.HandleFunc("/qr/", qrCodeHandler(domain))
 
 	slog.Info("listening on", "hostPort", hostPort)
 	err := http.ListenAndServe(hostPort, nil)
