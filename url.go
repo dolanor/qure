@@ -1,6 +1,8 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func urlShortenerHandler(w http.ResponseWriter, r *http.Request) {
 	key := r.URL.EscapedPath()[1:]

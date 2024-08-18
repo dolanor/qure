@@ -1,9 +1,18 @@
 package main
 
 import (
+	"database/sql"
+	"io"
+	"log"
 	"log/slog"
 	"net/http"
 	"os"
+
+	_ "modernc.org/sqlite"
+
+	"github.com/dolanor/rip"
+	"github.com/dolanor/rip/encoding/html"
+	"github.com/gorilla/handlers"
 )
 
 var links = map[string]string{
@@ -19,13 +28,42 @@ func main() {
 
 	domain := os.Getenv("DOMAIN")
 
+	ro := rip.NewRouteOptions().
+		WithCodecs(
+			html.NewEntityCodec("/admin/links/"),
+			html.NewEntityFormCodec("/admin/links/"),
+		).
+		WithErrors(rip.StatusMap{
+			ErrEmptyLinkSlug: http.StatusBadRequest,
+		}).
+		WithMiddlewares(loggerMiddleware(os.Stdout))
+
+	db, err := sql.Open("sqlite", "data.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	lp, err := NewLinkProvider(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	http.HandleFunc("/", urlShortenerHandler)
 
 	http.HandleFunc("/qr/", qrCodeHandler(domain))
 
+	http.HandleFunc(rip.HandleEntities("/admin/links/", lp, ro))
+
 	slog.Info("listening on", "hostPort", hostPort)
-	err := http.ListenAndServe(hostPort, nil)
+	err = http.ListenAndServe(hostPort, nil)
 	if err != nil {
 		slog.Error("http server interruption", "error", err)
+	}
+}
+
+func loggerMiddleware(logOut io.Writer) func(http.HandlerFunc) http.HandlerFunc {
+	return func(hf http.HandlerFunc) http.HandlerFunc {
+		logHandler := handlers.LoggingHandler(logOut, hf)
+		return logHandler.ServeHTTP
 	}
 }
