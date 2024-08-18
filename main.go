@@ -20,11 +20,11 @@ func main() {
 
 	ro := rip.NewRouteOptions().
 		WithCodecs(
-			html.NewEntityCodec("/admin/links/"),
-			html.NewEntityFormCodec("/admin/links/"),
+			html.NewEntityCodec("/admin/urls/"),
+			html.NewEntityFormCodec("/admin/urls/"),
 		).
 		WithErrors(rip.StatusMap{
-			ErrEmptyLinkSlug: http.StatusBadRequest,
+			ErrEmptyURLSlug: http.StatusBadRequest,
 		}).
 		WithMiddlewares(loggerMiddleware(os.Stdout))
 
@@ -34,17 +34,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	lp, err := NewLinkProvider(db)
+	lp, err := NewShortURLProvider(db)
 	if err != nil {
 		slog.Error("url provider creation", "error", err)
 		os.Exit(1)
 	}
 
-	http.HandleFunc("/", urlShortenerHandler)
+	http.HandleFunc("/", urlShortenerHandler(lp))
 
 	http.HandleFunc("/qr/", qrCodeHandler(cfg.domain))
 
-	http.HandleFunc(rip.HandleEntities("/admin/links/", lp, ro))
+	http.HandleFunc(rip.HandleEntities("/admin/urls/", lp, ro))
 
 	slog.Info("listening on", "hostPort", cfg.hostPort)
 	err = http.ListenAndServe(cfg.hostPort, nil)
