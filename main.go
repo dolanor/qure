@@ -20,12 +20,7 @@ var links = map[string]string{
 }
 
 func main() {
-	hostPort := os.ExpandEnv("${HOST}:${PORT}")
-	if hostPort == ":" {
-		hostPort = ":4444"
-	}
-
-	domain := os.Getenv("DOMAIN")
+	cfg := loadConfig()
 
 	ro := rip.NewRouteOptions().
 		WithCodecs(
@@ -51,12 +46,12 @@ func main() {
 
 	http.HandleFunc("/", urlShortenerHandler)
 
-	http.HandleFunc("/qr/", qrCodeHandler(domain))
+	http.HandleFunc("/qr/", qrCodeHandler(cfg.domain))
 
 	http.HandleFunc(rip.HandleEntities("/admin/links/", lp, ro))
 
-	slog.Info("listening on", "hostPort", hostPort)
-	err = http.ListenAndServe(hostPort, nil)
+	slog.Info("listening on", "hostPort", cfg.hostPort)
+	err = http.ListenAndServe(cfg.hostPort, nil)
 	if err != nil {
 		slog.Error("http server listen", "error", err)
 		os.Exit(1)

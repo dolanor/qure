@@ -6,7 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      DOMAIN: ${DOMAIN}
+      QURE_DOMAIN: ${QURE_DOMAIN}
+      QURE_HOST:   ${QURE_HOST}
+      QURE_PORT:   ${QURE_PORT}
     expose:
       - 4444
     ports:
