@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"io"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -40,12 +39,14 @@ func main() {
 
 	db, err := sql.Open("sqlite", "data.db")
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("sqlite open", "error", err)
+		os.Exit(1)
 	}
 
 	lp, err := NewLinkProvider(db)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("url provider creation", "error", err)
+		os.Exit(1)
 	}
 
 	http.HandleFunc("/", urlShortenerHandler)
@@ -57,7 +58,8 @@ func main() {
 	slog.Info("listening on", "hostPort", hostPort)
 	err = http.ListenAndServe(hostPort, nil)
 	if err != nil {
-		slog.Error("http server interruption", "error", err)
+		slog.Error("http server listen", "error", err)
+		os.Exit(1)
 	}
 }
 
