@@ -15,11 +15,6 @@ import (
 	"github.com/gorilla/handlers"
 )
 
-var links = map[string]string{
-	"1": "https://forrostrasbourg.fr/evenements/240821/",
-	"2": "https://forrostrasbourg.fr/evenements/240806/",
-}
-
 func main() {
 	cfg := loadConfig()
 
