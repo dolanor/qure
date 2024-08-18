@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	_ "modernc.org/sqlite"
 
@@ -32,7 +33,7 @@ func main() {
 		}).
 		WithMiddlewares(loggerMiddleware(os.Stdout))
 
-	db, err := sql.Open("sqlite", "data.db")
+	db, err := sql.Open("sqlite", filepath.Join(cfg.dbDirPath, "qure.db"))
 	if err != nil {
 		slog.Error("sqlite open", "error", err)
 		os.Exit(1)

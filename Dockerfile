@@ -2,6 +2,7 @@
 FROM golang:1.23 AS builder
 
 ENV GOMODCACHE=/root/.cache/gocache
+ENV CGO_ENABLED=0
 
 WORKDIR /app
 

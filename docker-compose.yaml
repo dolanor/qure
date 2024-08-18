@@ -9,7 +9,12 @@ services:
       QURE_DOMAIN: ${QURE_DOMAIN}
       QURE_HOST:   ${QURE_HOST}
       QURE_PORT:   ${QURE_PORT}
+      QURE_DB_DIR: ${QURE_DB_DIR}
     expose:
       - 4444
     ports:
       - 4444:4444
+    volumes:
+      - "db:${QURE_DB_DIR}"
+volumes:
+  db:
