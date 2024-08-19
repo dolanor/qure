@@ -25,4 +25,6 @@ func urlShortenerHandler(lp *ShortURLProvider) func(w http.ResponseWriter, r *ht
 		}
 
 	}
+	slog.Info("link clicked", "user_agent", r.Header.Values("User-Agent"), "src_ip", r.RemoteAddr, "src_real_ip", r.Header.Get("X-Real-Ip"))
+	http.Redirect(w, r, v, http.StatusTemporaryRedirect)
 }

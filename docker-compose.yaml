@@ -16,5 +16,22 @@ services:
       - 4444:4444
     volumes:
       - "db:${QURE_DB_DIR}"
+    labels:
+      - "traefik.instance=dsuite"
+      - "traefik.enable=true"
+      - "traefik.docker.network=dsuite_front"
+      - "traefik.http.routers.qure.entrypoints=websecure"
+      - "traefik.http.routers.qure.tls.certresolver=myresolver"
+      - "traefik.http.routers.qure.rule=Host(`l.txg.re`)"
+      - "traefik.http.services.qure.loadbalancer.server.port=4444"
+    restart: always
+    networks:
+      - front
+
+networks:
+  front:
+    external: true
+    name: dsuite_front
+
 volumes:
   db:
