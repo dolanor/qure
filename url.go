@@ -18,6 +18,12 @@ func urlShortenerHandler(lp *ShortURLProvider) func(w http.ResponseWriter, r *ht
 
 		http.Redirect(w, r, l.URL, http.StatusTemporaryRedirect)
 
+		slog.Info("link clicked",
+			"user_agent", r.Header.Values("User-Agent"),
+			"src_ip", r.RemoteAddr,
+			"src_real_ip", r.Header.Get("X-Real-Ip"),
+		)
+
 		err = lp.Click(r.Context(), slug)
 		if err != nil {
 			http.Error(w, "can not update click counter", http.StatusInternalServerError)
@@ -25,6 +31,4 @@ func urlShortenerHandler(lp *ShortURLProvider) func(w http.ResponseWriter, r *ht
 		}
 
 	}
-	slog.Info("link clicked", "user_agent", r.Header.Values("User-Agent"), "src_ip", r.RemoteAddr, "src_real_ip", r.Header.Get("X-Real-Ip"))
-	http.Redirect(w, r, v, http.StatusTemporaryRedirect)
 }
