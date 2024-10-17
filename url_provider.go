@@ -150,7 +150,7 @@ func (s *ShortURLProvider) List(ctx context.Context, offset, limit int) ([]Short
 
 func (s *ShortURLProvider) FindBySlug(ctx context.Context, slug string) (ShortURL, error) {
 	if slug == "" {
-		return ShortURL{}, nil
+		return ShortURL{}, ErrEmptyURLSlug
 	}
 	query := `
 	SELECT id, slug, url, clicks
