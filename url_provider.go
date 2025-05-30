@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"log"
+	"log/slog"
 )
 
 type ShortURL struct {
@@ -96,7 +96,7 @@ func (s *ShortURLProvider) Get(ctx context.Context, id string) (ShortURL, error)
 }
 
 func (s *ShortURLProvider) Update(ctx context.Context, url ShortURL) error {
-	log.Println("update:", url)
+	slog.Info("update:", url)
 	if url.Slug == "" {
 		return errors.New("empty url ID")
 	}
