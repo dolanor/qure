@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/skip2/go-qrcode"
 )
@@ -13,7 +14,9 @@ func qrCodeHandler(domain string) func(w http.ResponseWriter, r *http.Request) {
 
 		shortURL := fmt.Sprintf("http://%s/%s", domain, key)
 
-		png, err := qrcode.Encode(shortURL, qrcode.Low, 256)
+		uppercaseURL := strings.ToUpper(shortURL)
+
+		png, err := qrcode.Encode(uppercaseURL, qrcode.Low, 256)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
