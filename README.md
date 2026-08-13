@@ -1,5 +1,7 @@
 # The Qure
 
+![Qure illustration](.meta/assets/qure.png)
+
 The Qure is a URL shortener and a QRCode generator written in Go.
 
 ## Endpoints
