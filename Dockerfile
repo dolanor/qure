@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.23 AS builder
+FROM golang:1.26 AS builder
 
 ENV GOMODCACHE=/root/.cache/gocache
 ENV CGO_ENABLED=0
