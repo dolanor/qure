@@ -7,7 +7,7 @@ import (
 
 func urlShortenerHandler(lp *ShortURLProvider) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		slug := r.URL.EscapedPath()[1:]
+		slug := r.PathValue("slug")
 		slog.Info("click", "slug", slug)
 
 		l, err := lp.FindBySlug(r.Context(), slug)

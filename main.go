@@ -40,9 +40,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	http.HandleFunc("/", urlShortenerHandler(lp))
+	http.HandleFunc("GET /{slug}", urlShortenerHandler(lp))
 
-	http.HandleFunc("/qr/", qrCodeHandler(cfg.domain))
+	http.HandleFunc("GET /qr/{slug}", qrCodeHandler(cfg.domain))
 
 	http.HandleFunc(rip.HandleEntities("/admin/urls/", lp, ro))
 

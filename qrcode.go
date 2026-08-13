@@ -10,9 +10,9 @@ import (
 
 func qrCodeHandler(domain string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		key := r.URL.EscapedPath()[4:]
+		slug := r.PathValue("slug")
 
-		shortURL := fmt.Sprintf("http://%s/%s", domain, key)
+		shortURL := fmt.Sprintf("http://%s/%s", domain, slug)
 
 		uppercaseURL := strings.ToUpper(shortURL)
 
